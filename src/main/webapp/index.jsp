@@ -235,9 +235,7 @@ function addToCart(pdname, pdprice){
 	    	}
 	      })
 	      
-	        
-	        
-	        
+   
 	   });
 	   
 	});
