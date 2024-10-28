@@ -209,9 +209,35 @@ function addToCart(pdname, pdprice){
 	         productPrice.push(Number($(this).val()));
 	      });
 
-	        //가격의 합
-	        totalPrice = productPrice.reduce((acc, currentVal) => acc + currentVal, 0);      
-	        console.log("총가격 :" + totalPrice);
+	      //가격의 합
+	      totalPrice = productPrice.reduce((acc, currentVal) => acc + currentVal, 0);      
+	      console.log("총가격 :" + totalPrice);
+	        
+	      //ajax 요청
+	      $.jax({
+	    	url: 'order',
+	    	type:'post',
+	    	data:{
+	    		'pdname[]' : productName,
+	    		'pdprice[]' : productPrice,
+	    		'totalPrice' : totalPrce
+	    	},
+	    	success: function(data) {
+	    		//서버로부터 pdf파일 받아서 다운로드 처리하기
+	    		//Binary Large Object -- 이미지, 사운드, 비디오 등등 멀티미디어 데이터를 다룰 때 사용
+	    		let blob = new Blob([data], {type: 'application/pdf'});
+	    		let link = document.createElement('a');
+	    		link.href = window.URL.createObjectURL(blob);
+	    		link.download = "order.pdf";
+	    		link.click();
+	    	}, error: function(error){
+	    		console.error('에러'+ error);
+	    	}
+	      })
+	      
+	        
+	        
+	        
 	   });
 	   
 	});
