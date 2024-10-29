@@ -16,7 +16,7 @@
   width:260px;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -148,103 +148,103 @@
 let cart = [];
 
 function addToCart(pdname, pdprice){
-	   let cartObj = {
-	      "pdname" : pdname,
-	      "pdprice" : pdprice
-	   }
-	   //배열 cart 에 새로 받은 상품을 push
-	   cart.push(cartObj);
-	   updateCart();
-	}
+   let cartObj = {
+      "pdname" : pdname,
+      "pdprice" : pdprice
+   }
+   //배열 cart 에 새로 받은 상품을 push
+   cart.push(cartObj);
+   updateCart();
+}
 
-	function updateCart(){
+function updateCart(){
 
-	   let totalPrice = 0;
-	   let cartContent = '<ul class="list-group">';
-	   cart.forEach(function(item, index){
-	      if(item.pdname && typeof item.pdprice === 'number') {
-	      totalPrice += item.pdprice;      
-	      cartContent += "<li class='list-group-item d-flex justify-content-between'>" +
-	                     "<div>"+
-	                     "<label>이름</label>"+
-	                     item.pdname +
-	           "</div>"+
-	           "<div>"+
-	             "<label>가격</label>"+
-	              item.pdprice.toLocaleString() +" 원"+ 
-	           "</div>"+
-	         "</li> " +
-	         "<input type='hidden' name='pdname[]' value='"+item.pdname+"' />"+
-	         "<input type='hidden' name='pdprice[]' value='"+item.pdprice+"' />";      
-	      }else{
-	         console.error('무언가 에러' , item);
-	      }   
-	   });   
-	   
-	   cartContent += '<p>총 가격 : '+totalPrice.toLocaleString()+'원</p>';
-	   cartContent += '</ul>';
-	   cartContent +='<button type="button" id="orderbtn" class="btn btn-success mt-3">주문하기</button>';
-	     console.log(cartContent);
-	    $('.cart-in').html(cartContent);
-	}
-
-	$(function(){
-	   
-	   //scroll 이벤트 셋팅
-	   $(window).scroll(function(){
-	      //1. scroll 위치 값 구하기 
-	      let scrollTop = $(window).scrollTop();
-	      //.cart에 top값으로 적용
-	      $(".cart").css("top", scrollTop + "px");
-	   });
-	   
-	   $(document).on('click', "#orderbtn", function(){
-	      let productName = [];
-	      let productPrice = [];
-	      let totalPrice = 0;
-	      $('input[name="pdname[]"]').each(function(){
-	         productName.push($(this).val());
-	      });
-	      $('input[name="pdprice[]"]').each(function(){
-	         productPrice.push(Number($(this).val()));
-	      });
-
-	      //가격의 합
-	      totalPrice = productPrice.reduce((acc, currentVal) => acc + currentVal, 0);      
-	      console.log("총가격 :" + totalPrice);
-	        
-	      //ajax 요청
-	      $.jax({
-	    	url: 'order',
-	    	type:'post',
-	    	data:{
-	    		'pdname[]' : productName,
-	    		'pdprice[]' : productPrice,
-	    		'totalPrice' : totalPrce
-	    	},
-	    	success: function(data) {
-	    		//서버로부터 pdf파일 받아서 다운로드 처리하기
-	    		//Binary Large Object -- 이미지, 사운드, 비디오 등등 멀티미디어 데이터를 다룰 때 사용
-	    		let blob = new Blob([data], {type: 'application/pdf'});
-	    		let link = document.createElement('a');
-	    		link.href = window.URL.createObjectURL(blob);
-	    		link.download = "order.pdf";
-	    		link.click();
-	    	}, error: function(error){
-	    		console.error('에러'+ error);
-	    	}
-	      })
-	      
+   let totalPrice = 0;
+   let cartContent = '<ul class="list-group">';
+   cart.forEach(function(item, index){
+      if(item.pdname && typeof item.pdprice === 'number') {
+      totalPrice += item.pdprice;      
+      cartContent += "<li class='list-group-item d-flex justify-content-between'>" +
+                     "<div>"+
+                     "<label>이름</label>"+
+                     item.pdname +
+           "</div>"+
+           "<div>"+
+             "<label>가격</label>"+
+              item.pdprice.toLocaleString() +" 원"+ 
+           "</div>"+
+         "</li> " +
+         "<input type='hidden' name='pdname[]' value='"+item.pdname+"' />"+
+         "<input type='hidden' name='pdprice[]' value='"+item.pdprice+"' />";      
+      }else{
+         console.error('무언가 에러' , item);
+      }   
+   });   
    
-	   });
-	   
-	});
+   cartContent += '<p>총 가격 : '+totalPrice.toLocaleString()+'원</p>';
+   cartContent += '</ul>';
+   cartContent +='<button type="button" id="orderbtn" class="btn btn-success mt-3">주문하기</button>';
+     console.log(cartContent);
+    $('.cart-in').html(cartContent);
+}
+
+$(function(){
+   
+   //scroll 이벤트 셋팅
+   $(window).scroll(function(){
+      //1. scroll 위치 값 구하기 
+      let scrollTop = $(window).scrollTop();
+      //.cart에 top값으로 적용
+      $(".cart").css("top", scrollTop + "px");
+   });
+   
+   $(document).on('click', "#orderbtn", function(){
+      let productName = [];
+      let productPrice = [];
+      let totalPrice = 0;
+      $('input[name="pdname[]"]').each(function(){
+         productName.push($(this).val());
+      });
+      $('input[name="pdprice[]"]').each(function(){
+         productPrice.push(Number($(this).val()));
+      });
+
+        //가격의 합
+        totalPrice = productPrice.reduce((acc, currentVal) => acc + currentVal, 0);      
+        //console.log("총가격 :" + totalPrice);
+        
+        //ajax 요청
+        $.ajax({
+           url: 'order',
+           type: 'post',
+           data: {
+              'pdname[]' : productName,
+              'pdprice[]' : productPrice,
+              'totalPrice' : totalPrice
+           },
+           success: function(data) {
+              //서버로 부터 pdf파일 받아서 다운로드 처리하기 
+              //Binary Large Object -- 이미지, 사운드, 비디오 등등 멀티미디어 데이터를 다룰 때 사용
+              /*
+              let blob = new Blob([data], { type: 'application/pdf'});
+              let link = document.createElement('a');
+              link.href= window.URL.createObjectURL(blob);
+              link.download = 'order.pdf';
+              link.click();
+              */
+              if(data.filePath){
+                 window.location.href = data.filePath;  //pdf파일 다운로드
+              }else{
+                 alert("pdf파일이 생성되지 않았습니다. 실패!!!");
+              }
+           },
+           error: function(error) {
+              console.error('에러'+error);
+           }
+        });
+   });
+   
+});
 </script>
 </body>
 </html>
-
-
-
-
-
-
